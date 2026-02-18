@@ -3,19 +3,16 @@ const nodemailer = require('nodemailer');
 const port = Number(process.env.EMAIL_PORT || 587);
 
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
+  host: process.env.EMAIL_HOST || 'smtp.sendgrid.net',
   port,
   secure: port === 465,
   auth: {
-    user: process.env.EMAIL_USER,
+    user: process.env.EMAIL_USER || 'apikey',
     pass: process.env.EMAIL_PASS
   },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
-  pool: true,
-  maxConnections: 5,
-  maxMessages: 10
+  connectionTimeout: 30000,
+  greetingTimeout: 30000,
+  socketTimeout: 30000
 });
 
 const sendOTPEmail = async (email, otp, name) => {
