@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if git diff --cached --name-only | grep -E '(^|/)\.env$|^server/\.env$|^client/\.env$' >/dev/null 2>&1; then
+  echo "Error: .env files must not be committed. Remove them from staging."
+  exit 1
+fi
+
+exit 0
