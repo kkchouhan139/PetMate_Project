@@ -1,24 +1,11 @@
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 
-const port = Number(process.env.EMAIL_PORT || 587);
-
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || 'smtp.sendgrid.net',
-  port,
-  secure: port === 465,
-  auth: {
-    user: process.env.EMAIL_USER || 'apikey',
-    pass: process.env.EMAIL_PASS
-  },
-  connectionTimeout: 30000,
-  greetingTimeout: 30000,
-  socketTimeout: 30000
-});
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const sendOTPEmail = async (email, otp, name) => {
-  const mailOptions = {
-    from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+  const msg = {
     to: email,
+    from: process.env.EMAIL_FROM,
     subject: 'Verify your email for PetMate',
     html: `
       <!DOCTYPE html>
@@ -70,15 +57,15 @@ const sendOTPEmail = async (email, otp, name) => {
     `
   };
 
-  return transporter.sendMail(mailOptions);
+  return sgMail.send(msg);
 };
 
 const sendPasswordResetEmail = async (email, resetToken, name) => {
   const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
   
-  const mailOptions = {
-    from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+  const msg = {
     to: email,
+    from: process.env.EMAIL_FROM,
     subject: 'Reset your PetMate password',
     html: `
       <!DOCTYPE html>
@@ -131,7 +118,7 @@ const sendPasswordResetEmail = async (email, resetToken, name) => {
     `
   };
 
-  return transporter.sendMail(mailOptions);
+  return sgMail.send(msg);
 };
 
 module.exports = { sendOTPEmail, sendPasswordResetEmail };
