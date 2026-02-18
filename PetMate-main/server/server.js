@@ -70,7 +70,7 @@ const helmetConfig = process.env.NODE_ENV === 'production'
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: allowedOrigins.length ? allowedOrigins : "https://petmateproject.vercel.app/",
+    origin: allowedOrigins.length ? allowedOrigins : ["https://petmateproject.vercel.app"],
     methods: ["GET", "POST"]
   }
 });
