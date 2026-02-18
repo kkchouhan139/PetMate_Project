@@ -1,7 +1,6 @@
 const nodemailer = require('nodemailer');
 
 const port = Number(process.env.EMAIL_PORT || 587);
-// console.log('SMTP_HOST', process.env.EMAIL_HOST, 'SMTP_PORT', process.env.EMAIL_PORT);
 
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
@@ -10,7 +9,13 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
-  }
+  },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
+  pool: true,
+  maxConnections: 5,
+  maxMessages: 10
 });
 
 const sendOTPEmail = async (email, otp, name) => {
